@@ -115,3 +115,54 @@ function fetchData(url_api, callback) {
 }
 /* DE esta forma ya tengo lista la funcion que le 
 va darle vida a las llamadas de a la API */
+/* ------------------------------------------------------------------------------------------------ */
+
+/* Ya tenemos la funcion encargada de hacer peticiones
+a la API, vamos a resolver nuestro problema que es
+hacer una peticon a la api, obtener cuantos personajes
+tienes despues acceder al primer personja y obtener
+la ubicacion en la que se encuentra para saber luego
+la dimensión. Con esto claro vamos a realizar tres llamados
+a nuestra API utilizando callbacks  */
+
+/* En la parte superior del documento voy a declarar
+una variable API en donde voy a guardar la url del llamado
+a la api */
+
+/* Hago el llamado a fetchdata que recibe por 
+parametro API y despues una funcion en este caso es
+el callback que tambien recibe por parametro 
+2 elementos el error y la onformacion o los datos 
+resultantes y los llamamos error1, data1. 
+¿Por que el 1 en los parametros ? 
+por que voy a utilizar esta funcion varias veces de
+forma anidada para hacer las tres peticiones que
+necesito*/
+fetchData(API, function (error1, data1) {
+  /* hago una validacion por que tengo que manejar 
+  errores, si este existe o llega retorne algo, 
+  al llegar al return la funcion se acaba */
+  if (error1) return console.error(error1);
+  /* En dado caso que la peticion funcione 
+  utilizo a fetchData nuevamente y por parametro le
+  paso API NUEVAMENTE y el resultado en este caso 
+  data1 y despues de analizar la api en postman 
+  sabemos que la informacion que necesitamos
+  esta en results voy a este arreglo adentro 
+  del arreglo que estamos obteniendo y nos ubicamos
+  en la primera posicion que es la que necesitamos
+  y obtengo su id. Continuando con la estructura 
+  creo la nueva function que recibe estos dos valores
+  error2 y data 2 */
+  fetchData(API + data1.results[0].id, function (error2, data2) {
+    if (error2) return console.error(error2);
+
+    fetchData(data2.origin.url, function (error3, data3) {
+      if (error3) return console.error(error3);
+
+      console.log(data1.info.count);
+      console.log(data2.name);
+      console.log(data3.dimension);
+    });
+  });
+});
